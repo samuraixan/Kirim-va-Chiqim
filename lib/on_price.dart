@@ -366,6 +366,7 @@ class _OnPriceState extends State<OnPrice> {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
+                    reverse: true,
                     itemCount: journals1.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(

@@ -562,6 +562,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              reverse: true,
               itemCount: chiqimList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
