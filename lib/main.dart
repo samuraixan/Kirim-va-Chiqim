@@ -151,11 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   maxLines: null,
                   controller: nameController,
                   textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     fillColor: Colors.black12,
                     filled: true,
                     label: Row(
-                      children: const [
+                      children: [
                         Text(
                           'Nomi',
                         ),
@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ],
                     ),
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(
                           8,
@@ -191,11 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   maxLines: null,
                   keyboardType: TextInputType.number,
                   controller: offPriceController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     fillColor: Colors.black12,
                     filled: true,
                     label: Row(
-                      children: const [
+                      children: [
                         Text(
                           'Chiqim summa',
                         ),
@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ],
                     ),
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(
                           8,
@@ -231,11 +231,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   readOnly: true,
                   keyboardType: TextInputType.number,
                   controller: dateController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     fillColor: Colors.black12,
                     filled: true,
                     label: Row(
-                      children: const [
+                      children: [
                         Text(
                           'Vaqt',
                         ),
@@ -248,9 +248,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ],
                     ),
-                    prefixIcon: const Icon(Icons.calendar_today),
+                    prefixIcon: Icon(Icons.calendar_today),
                     hintText: 'Kun_Oy_Yil',
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(
                           8,

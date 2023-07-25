@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rasxod/sql_helper.dart';
 
+
+
+
 class ProfitPage extends StatefulWidget {
   const ProfitPage({super.key});
 
@@ -68,11 +71,11 @@ class _ProfitPageState extends State<ProfitPage> {
                             readOnly: true,
                             keyboardType: TextInputType.number,
                             controller: fromController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               fillColor: Colors.white,
                               filled: true,
                               label: Row(
-                                children: const [
+                                children: [
                                   Text(
                                     'dan',
                                   ),
@@ -85,9 +88,9 @@ class _ProfitPageState extends State<ProfitPage> {
                                   )
                                 ],
                               ),
-                              prefixIcon: const Icon(Icons.calendar_today),
+                              prefixIcon: Icon(Icons.calendar_today),
                               hintText: 'Kun_Oy_Yil',
-                              border: const OutlineInputBorder(
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
                                     8,
@@ -129,11 +132,11 @@ class _ProfitPageState extends State<ProfitPage> {
                             readOnly: true,
                             keyboardType: TextInputType.number,
                             controller: beforeController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               fillColor: Colors.white,
                               filled: true,
                               label: Row(
-                                children: const [
+                                children: [
                                   Text(
                                     'gacha',
                                   ),
@@ -146,9 +149,9 @@ class _ProfitPageState extends State<ProfitPage> {
                                   )
                                 ],
                               ),
-                              prefixIcon: const Icon(Icons.calendar_today),
+                              prefixIcon: Icon(Icons.calendar_today),
                               hintText: 'Kun_Oy_Yil',
-                              border: const OutlineInputBorder(
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
                                     8,
@@ -192,29 +195,27 @@ class _ProfitPageState extends State<ProfitPage> {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       List<Map<String, dynamic>> filteredJournals =
-                          journals.where((journal) {
+                      journals.where((journal) {
                         DateTime froDate = DateFormat('dd-MM-yyyy')
                             .parse(fromController.text.trim());
-                        DateTime beforeDate = DateFormat('dd-MM-yyyy')
+                        DateTime toDate = DateFormat('dd-MM-yyyy')
                             .parse(beforeController.text.trim());
                         DateTime journalDate =
-                            DateFormat('dd-MM-yyyy').parse(journal['date']);
+                        DateFormat('dd-MM-yyyy').parse(journal['date']);
 
                         return journalDate.isAfter(
-                                froDate.subtract(const Duration(days: 1))) &&
-                            journalDate.isBefore(beforeDate);
+                            froDate.subtract(const Duration(days: 1))) &&
+                            journalDate.isBefore(toDate.add(Duration(days: 1)));
                       }).toList();
 
                       Map<String, Decimal> totalPriceMap = {};
                       filteredJournals.forEach((journal) {
                         String name = journal['name'];
-                        Decimal price =
-                            Decimal.tryParse(journal['offPrice'].toString()) ??
-                                Decimal.zero;
+                        Decimal offPrice = Decimal.tryParse(journal['offPrice'].toString()) ?? Decimal.zero;
                         if (!totalPriceMap.containsKey(name)) {
-                          totalPriceMap[name] = price;
+                          totalPriceMap[name] = offPrice;
                         } else {
-                          totalPriceMap[name] = totalPriceMap[name]! + price;
+                          totalPriceMap[name] = totalPriceMap[name]! + offPrice;
                         }
                       });
                       Decimal totalSum = totalPriceMap.values
@@ -326,57 +327,57 @@ class _ProfitPageState extends State<ProfitPage> {
       body: SingleChildScrollView(
         child: common != Decimal.zero
             ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: totalPriceMap.length,
-                    itemBuilder: (context, index) {
-                      String name = totalPriceMap.keys.toList()[index];
-                      Decimal price = totalPriceMap.values.toList()[index];
-                      return Card(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text('Nomi: '),
-                                Expanded(
-                                  child: Text(
-                                    name,
-                                  ),
-                                ),
-                              ],
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: totalPriceMap.length,
+              itemBuilder: (context, index) {
+                String name = totalPriceMap.keys.toList()[index];
+                Decimal offPrice = totalPriceMap.values.toList()[index];
+                return Card(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text('Nomi: '),
+                          Expanded(
+                            child: Text(
+                              name,
                             ),
-                            const SizedBox(
-                              height: 5,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text(
+                            'Narhi:',
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${offPrice.toString()} so`m',
                             ),
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text(
-                                  'Narhi:',
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    '${price.toString()} so`m',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              )
+                );
+              },
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+          ],
+        )
             : const SizedBox(),
       ),
     );
