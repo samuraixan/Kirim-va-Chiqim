@@ -5,6 +5,8 @@ import 'package:rasxod/profit_page.dart';
 import 'package:rasxod/sql_helper.dart';
 import 'on_price.dart';
 
+
+
 void main() {
   runApp(const MyApp());
 }
@@ -59,15 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   loadData() async {
-    isLoading =true;
-    setState(() {
-
-    });
+    isLoading = true;
+    setState(() {});
     final data = await SQLHelper.getItems();
-    if (kirimList.isEmpty) {
-      final data1 = await SQLHelper.getItems1();
-      kirimList = data1;
-    }
+    final data1 = await SQLHelper.getItems1();
+    kirimList = data1;
+
     setState(() {
       chiqimList = data;
       print('....qo`shilgan ${chiqimList.length}');
@@ -121,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void offForm(int? id) async {
     if (id != null) {
       final existingJournal =
-          chiqimList.firstWhere((element) => element['id'] == id);
+      chiqimList.firstWhere((element) => element['id'] == id);
       nameController.text = existingJournal['name'];
       offPriceController.text = existingJournal['offPrice'];
       dateController.text = existingJournal['date'];
@@ -261,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onTap: () async {
                     String tdata =
-                        DateFormat('HH:mm:ss').format(DateTime.now());
+                    DateFormat('HH:mm:ss').format(DateTime.now());
                     DateTime? pickeddate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -326,23 +325,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(isLoading){
-      return const Center(
-        child:CircularProgressIndicator()
-      );
-    }
-    Decimal totalSumOff =
-        chiqimList.fold<Decimal>(Decimal.zero, (sum, journal) {
-      Decimal price =
-          Decimal.tryParse(journal['offPrice'].toString()) ?? Decimal.zero;
+    // if (isLoading) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
+    Decimal totalSumOff = chiqimList.fold<Decimal>(Decimal.zero, (sum, journal) {
+      Decimal price = Decimal.tryParse(journal['offPrice'].toString()) ?? Decimal.zero;
       return sum + price;
     });
     Decimal totalSumOn = kirimList.fold<Decimal>(Decimal.zero, (sum1, journal) {
-          Decimal price1 =
-              Decimal.tryParse(journal['onPrice'].toString()) ?? Decimal.zero;
-          return sum1 + price1;
-        }) -
-        totalSumOff;
+      Decimal price1 = Decimal.tryParse(journal['onPrice'].toString()) ?? Decimal.zero;
+      return sum1 + price1;
+    }) - totalSumOff;
     return Scaffold(
       backgroundColor: Colors.indigo,
       appBar: AppBar(
@@ -373,12 +366,14 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 20,
           ),
           IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
+            onPressed: () async {
+              await Navigator.push(
+                context,
                 MaterialPageRoute(
                   builder: (context) => const OnPrice(),
                 ),
               );
+              await loadData();
             },
             icon: const Icon(
               Icons.arrow_forward_outlined,
@@ -392,304 +387,304 @@ class _MyHomePageState extends State<MyHomePage> {
           child: totalSumOff == Decimal.zero && totalSumOn == Decimal.zero
               ? const SizedBox()
               : Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Center(
-                                child: Text(
-                                  'Qolgan summa',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              content: Container(
-                                width: 100,
-                                height: 150,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        '$totalSumOn so`m',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('Ok'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Card(
-                        child: SizedBox(
-                          height: 70,
-                          width: 400,
+            children: [
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Center(
+                          child: Text(
+                            'Qolgan summa',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        content: Container(
+                          width: 100,
+                          height: 150,
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Center(
+                              Expanded(
                                 child: Text(
-                                  'Qolgan summa',
-                                  style: TextStyle(
+                                  '$totalSumOn so`m',
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '$totalSumOn so`m',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Center(
-                                child: Text(
-                                  'Umumiy chiqim',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              content: Container(
-                                width: 100,
-                                height: 150,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        '$totalSumOff so`m',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('Ok'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Card(
-                        child: SizedBox(
-                          height: 70,
-                          width: 400,
-                          child: Column(
-                            children: [
-                              const Center(
-                                child: Text(
-                                  'Umumiy chiqim',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '$totalSumOff so`m',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Ok'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Card(
+                  child: SizedBox(
+                    height: 70,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        const Center(
+                          child: Text(
+                            'Qolgan summa',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '$totalSumOn so`m',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
+              ),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Center(
+                          child: Text(
+                            'Umumiy chiqim',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        content: Container(
+                          width: 100,
+                          height: 150,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '$totalSumOff so`m',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Ok'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Card(
+                  child: SizedBox(
+                    height: 70,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        const Center(
+                          child: Text(
+                            'Umumiy chiqim',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '$totalSumOff so`m',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: chiqimList.isNotEmpty
           ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: chiqimList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Ma`lumot'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'Vaqti: ${chiqimList[index]['date']}'),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                          'Nomi: ${chiqimList[index]['name']}'),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                          'Narhi: ${chiqimList[index]['offPrice']}'),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Ok'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: ListTile(
-                            leading: SizedBox(
-                              width: 150,
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(chiqimList[index]['date']),
-                                  Expanded(
-                                    child: Text(
-                                      chiqimList[index]['name'],
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      '${chiqimList[index]['offPrice']} so`m',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: chiqimList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Ma`lumot'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Vaqti: ${chiqimList[index]['date']}'),
+                                const SizedBox(height: 8),
+                                Text(
+                                    'Nomi: ${chiqimList[index]['name']}'),
+                                const SizedBox(height: 8),
+                                Text(
+                                    'Narhi: ${chiqimList[index]['offPrice']}'),
+                              ],
                             ),
-                            trailing: SizedBox(
-                              width: 100,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      offForm(chiqimList[index]['id']);
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'O`chirishni xoxlaysizmi?'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text("HA"),
-                                                onPressed: () {
-                                                  deleteItem(
-                                                      chiqimList[index]['id']);
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: const Text("YO`Q"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete,
-                                    ),
-                                  ),
-                                ],
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Ok'),
                               ),
-                            ),
-                          ),
-                        ),
+                            ],
+                          );
+                        },
                       );
                     },
+                    child: ListTile(
+                      leading: SizedBox(
+                        width: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(chiqimList[index]['date']),
+                            Expanded(
+                              child: Text(
+                                chiqimList[index]['name'],
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${chiqimList[index]['offPrice']} so`m',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: SizedBox(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                offForm(chiqimList[index]['id']);
+                              },
+                              icon: const Icon(
+                                Icons.edit,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                          'O`chirishni xoxlaysizmi?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text("HA"),
+                                          onPressed: () {
+                                            deleteItem(
+                                                chiqimList[index]['id']);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text("YO`Q"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-            )
-          : const Center(
-              child: Text(
-                'Hozircha bo`sh',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
+                );
+              },
             ),
+          ],
+        ),
+      )
+          : const Center(
+        child: Text(
+          'Hozircha bo`sh',
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
+        ),
+      ),
     );
   }
 }

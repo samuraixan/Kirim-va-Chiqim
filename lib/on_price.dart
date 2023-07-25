@@ -236,11 +236,11 @@ class _OnPriceState extends State<OnPrice> {
 
   @override
   Widget build(BuildContext context) {
-    if(isLoading){
-      return const Center(
-          child:CircularProgressIndicator()
-      );
-    }
+    // if(isLoading){
+    //   return const Center(
+    //       child:CircularProgressIndicator()
+    //   );
+    // }
     Decimal totalSumOn = journals1.fold<Decimal>(Decimal.zero, (sum1, journal) {
       Decimal price1 =
           Decimal.tryParse(journal['onPrice'].toString()) ?? Decimal.zero;
