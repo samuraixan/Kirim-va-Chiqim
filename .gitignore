@@ -47,6 +47,7 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.jks
 
 # Flutter/Dart/Pub related
 **/doc/api/
